@@ -67,7 +67,7 @@ class ExternalClusterTestHelper:
         return os.getenv("H2O_CLIENT_IP", ExternalClusterTestHelper.get_local_non_loopback_ipv4_address())
 
     def _launch_single(self, cloud_name, ip):
-        cmd_line = ["java", "-cp", ":".join([self.h2o_extended_jar, self.sw_jar]), "water.H2OApp", "-md5skip", "-name", cloud_name, "-ip", ip]
+        cmd_line = ["java", "-cp", ":".join([self.h2o_extended_jar, self.sw_jar]), "water.H2OApp", "-name", cloud_name, "-ip", ip]
         return subprocess.Popen(cmd_line)
 
     @staticmethod
