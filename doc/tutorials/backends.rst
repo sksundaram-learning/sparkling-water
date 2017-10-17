@@ -146,7 +146,6 @@ To start external H2O cluster where the nodes are discovered using the
 flatfile, you can run
 
 .. code:: bash
-.. code:: bash
 
     java -jar $H2O_EXTENDED_JAR -name test -flatfile path_to_flatfile
 
