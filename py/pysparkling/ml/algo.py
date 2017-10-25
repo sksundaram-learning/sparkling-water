@@ -5,8 +5,8 @@ from pyspark.ml.param.shared import *
 from pyspark.ml.util import JavaMLReadable, JavaMLWritable
 from pyspark.ml.wrapper import JavaEstimator, JavaModel, JavaTransformer, _jvm
 from pyspark.ml.common import inherit_doc
-
-class H2OGBM(JavaTransformer, HasInputCol, HasOutputCol, JavaMLReadable, JavaMLWritable):
+from pysparkling import *
+class H2OGBM(JavaEstimator, JavaMLReadable, JavaMLWritable):
 
     featuresCols = Param(Params._dummy(), "featuresCols", "columns used as features")
 
@@ -15,7 +15,11 @@ class H2OGBM(JavaTransformer, HasInputCol, HasOutputCol, JavaMLReadable, JavaMLW
     @keyword_only
     def __init__(self, featuresCols=[], predictionsCol=None):
         super(H2OGBM, self).__init__()
-        self._java_obj = self._new_java_obj("org.apache.spark.ml.h2o.algos.H2OGBM", self.uid)
+        self._java_obj = self._new_java_obj("org.apache.spark.ml.h2o.algos.H2OGBM",
+                                            self.uid,
+                                            H2OContext.getOrCreate(spark)._jhc.hc,
+                                            H2OContext.getOrCreate(spark)._jsql_context
+                                            )
         self._setDefault(featuresCols=[], predictionsCol=None)
         kwargs = self._input_kwargs
         self.setParams(**kwargs)

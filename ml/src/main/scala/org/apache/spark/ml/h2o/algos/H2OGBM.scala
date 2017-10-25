@@ -49,6 +49,8 @@ class H2OGBM(parameters: Option[GBMParameters], override val uid: String)
     new H2OMOJOModel(mojoModel, mojoData)
   }
 
+  def this(uid: String, hc: H2OContext, sqlContext: SQLContext) = this(None, uid)(hc, sqlContext)
+
   def this()(implicit h2oContext: H2OContext, sqlContext: SQLContext) = this(None, Identifiable.randomUID("gbm"))
 
   def this(parameters: GBMParameters)(implicit h2oContext: H2OContext, sqlContext: SQLContext) = this(Option(parameters), Identifiable.randomUID("gbm"))
