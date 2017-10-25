@@ -50,7 +50,9 @@ idf = IDF(inputCol=hashingTF.getOutputCol(),
           minDocFreq=4)
 
 ## Create GBM model
-gbm = None
+gbm = H2OGBM(trainRatio=0.8,
+             featuresCols=idf.getOutputCol(),
+             predictionsCol="label")
 
 ## Remove all helper columns
 colPruner = ColumnPruner(columns=[idf.getOutputCol(), hashingTF.getOutputCol(), stopWordsRemover.getOutputCol(), tokenizer.getOutputCol()])

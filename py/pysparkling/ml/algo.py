@@ -7,31 +7,32 @@ from pyspark.ml.wrapper import JavaEstimator, JavaModel, JavaTransformer, _jvm
 from pyspark.ml.common import inherit_doc
 
 class H2OGBM(JavaTransformer, HasInputCol, HasOutputCol, JavaMLReadable, JavaMLWritable):
-    keep = Param(Params._dummy(), "keep", "keep the specified columns in the frame")
 
-    columns = Param(Params._dummy(), "columns", "specified columns")
+    featuresCols = Param(Params._dummy(), "featuresCols", "columns used as features")
+
+    predictionsCol = Param(Params._dummy(), "predictionsCol", "label")
 
     @keyword_only
-    def __init__(self, keep=False, columns=[]):
-        super(ColumnPruner, self).__init__()
-        self._java_obj = self._new_java_obj("org.apache.spark.ml.h2o.features.ColumnPruner", self.uid)
-        self._setDefault(keep=False, columns=[])
+    def __init__(self, featuresCols=[], predictionsCol=None):
+        super(H2OGBM, self).__init__()
+        self._java_obj = self._new_java_obj("org.apache.spark.ml.h2o.algos.H2OGBM", self.uid)
+        self._setDefault(featuresCols=[], predictionsCol=None)
         kwargs = self._input_kwargs
         self.setParams(**kwargs)
 
     @keyword_only
-    def setParams(self, keep=False, columns=[]):
+    def setParams(self, featuresCols=[], predictionsCol=None):
         kwargs = self._input_kwargs
         return self._set(**kwargs)
 
-    def setKeep(self, value):
-        return self._set(keep=value)
+    def setFeaturesCols(self, value):
+        return self._set(featuresCols=value)
 
-    def setColumns(self, value):
-        return self._set(columns=value)
+    def setPredictionsCol(self, value):
+        return self._set(predictionsCol=value)
 
-    def getKeep(self):
-        self.getOrDefault(self.keep)
+    def getFeaturesCols(self):
+        self.getOrDefault(self.featuresCols)
 
-    def getColumns(self):
-        self.getOrDefault(self.column
+    def getPredictionsCol(self):
+        self.getOrDefault(self.predictionsCol)
