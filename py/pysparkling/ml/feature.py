@@ -1,16 +1,14 @@
 from pyspark import since, keyword_only
-from pyspark.rdd import ignore_unicode_prefix
-from pyspark.ml.linalg import _convert_to_vector
 from pyspark.ml.param.shared import *
 from pyspark.ml.util import JavaMLReadable, JavaMLWritable
 from pyspark.ml.wrapper import JavaEstimator, JavaModel, JavaTransformer, _jvm
-from pyspark.ml.common import inherit_doc
 
-class ColumnPruner(JavaTransformer, HasInputCol, HasOutputCol, JavaMLReadable, JavaMLWritable):
+class ColumnPruner(JavaTransformer, JavaMLReadable, JavaMLWritable):
 
     keep = Param(Params._dummy(), "keep", "keep the specified columns in the frame")
 
     columns = Param(Params._dummy(), "columns", "specified columns")
+
 
     @keyword_only
     def __init__(self, keep=False, columns=[]):

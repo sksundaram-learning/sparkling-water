@@ -5,6 +5,7 @@ from pyspark.ml.param.shared import *
 from pyspark.ml.util import JavaMLReadable, JavaMLWritable
 from pyspark.ml.wrapper import JavaEstimator, JavaModel, JavaTransformer, _jvm
 from pyspark.ml.common import inherit_doc
+from pyspark import SparkContext
 from pysparkling import *
 class H2OGBM(JavaEstimator, JavaMLReadable, JavaMLWritable):
 
@@ -17,8 +18,8 @@ class H2OGBM(JavaEstimator, JavaMLReadable, JavaMLWritable):
         super(H2OGBM, self).__init__()
         self._java_obj = self._new_java_obj("org.apache.spark.ml.h2o.algos.H2OGBM",
                                             self.uid,
-                                            H2OContext.getOrCreate(spark)._jhc.hc,
-                                            H2OContext.getOrCreate(spark)._jsql_context
+                                            H2OContext.getOrCreate(SparkContext._active_spark_context)._jhc.h2oContext(),
+                                            H2OContext.getOrCreate(SparkContext._active_spark_context)._jsql_context
                                             )
         self._setDefault(featuresCols=[], predictionsCol=None)
         kwargs = self._input_kwargs
@@ -40,3 +41,25 @@ class H2OGBM(JavaEstimator, JavaMLReadable, JavaMLWritable):
 
     def getPredictionsCol(self):
         self.getOrDefault(self.predictionsCol)
+
+    def _create_model(self, java_model):
+        return H2OGBMModel(java_model)
+
+
+class H2OGBMModel(JavaModel, JavaMLWritable, JavaMLReadable):
+
+    @property
+    @since("2.2.0")
+    def coefficients(self):
+        """
+        Model coefficients of Linear SVM Classifier.
+        """
+        return self._call_java("coefficients")
+
+    @property
+    @since("2.2.0")
+    def intercept(self):
+        """
+        Model intercept of Linear SVM Classifier.
+        """
+        return self._call_java("intercept")
